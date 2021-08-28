@@ -150,6 +150,14 @@ class LocalAuthentication {
   Future<bool> isDeviceSupported() async =>
       (await _channel.invokeMethod<bool>('isDeviceSupported')) ?? false;
 
+  /// Returns true if device is capable of checking fingerPrint or is able to
+  /// fail over to device credentials.
+  ///
+  /// Returns a [Future] bool true or false:
+  Future<bool> isFingerPrintDeviceSupported() async =>
+      (await _channel.invokeMethod<bool>('isFingerPrintDeviceSupported')) ??
+      false;
+
   /// Returns a list of enrolled biometrics
   ///
   /// Returns a [Future] List<BiometricType> with the following possibilities:

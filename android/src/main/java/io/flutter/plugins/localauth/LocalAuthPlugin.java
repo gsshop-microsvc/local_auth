@@ -110,6 +110,9 @@ public class LocalAuthPlugin implements MethodCallHandler, FlutterPlugin, Activi
       case "stopAuthentication":
         stopAuthentication(result);
         break;
+      case "isFingerPrintDeviceSupported":
+        isFingerPrintDeviceSupported(result);
+        break;
       default:
         result.notImplemented();
         break;
@@ -274,6 +277,8 @@ public class LocalAuthPlugin implements MethodCallHandler, FlutterPlugin, Activi
     if (fingerprintMgr.isHardwareDetected()) {
       if (fingerprintMgr.hasEnrolledFingerprints()) {
         biometrics.add("fingerprint");
+      } else {
+        biometrics.add("undefined");
       }
     }
     if (Build.VERSION.SDK_INT >= 29) {
@@ -293,6 +298,16 @@ public class LocalAuthPlugin implements MethodCallHandler, FlutterPlugin, Activi
     return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && keyguardManager.isDeviceSecure());
   }
 
+  private boolean isFingerPrintDeviceSupported() {
+    if (activity == null || activity.isFinishing()) {
+      return false;
+    }
+
+    PackageManager packageManager = activity.getPackageManager();
+    FingerprintManagerCompat fingerprintMgr = FingerprintManagerCompat.from(activity);
+    return fingerprintMgr.isHardwareDetected();
+  }
+
   private boolean canAuthenticateWithBiometrics() {
     if (biometricManager == null) return false;
     return biometricManager.canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS;
@@ -305,6 +320,10 @@ public class LocalAuthPlugin implements MethodCallHandler, FlutterPlugin, Activi
 
   private void isDeviceSupported(Result result) {
     result.success(isDeviceSupported());
+  }
+
+  private void isFingerPrintDeviceSupported(Result result) {
+    result.success(isFingerPrintDeviceSupported());
   }
 
   @Override

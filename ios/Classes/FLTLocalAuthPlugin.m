@@ -39,6 +39,8 @@
     [self getAvailableBiometrics:result];
   } else if ([@"isDeviceSupported" isEqualToString:call.method]) {
     result(@YES);
+  } else if ([@"isFingerPrintDeviceSupported" isEqualToString:call.method]) {
+    [self isFingerPrintDeviceSupported:result];
   } else {
     result(FlutterMethodNotImplemented);
   }
@@ -114,6 +116,21 @@
     [biometrics addObject:@"undefined"];
   }
   result(biometrics);
+}
+
+- (void)isFingerPrintDeviceSupported:(FlutterResult)result {
+  LAContext *context = self.createAuthContext;
+  NSError *authError = nil;
+  NSMutableArray<NSString *> *biometrics = [[NSMutableArray<NSString *> alloc] init];
+  
+  if ([context canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics
+                           error:&authError]) {
+      if (authError == nil) {
+          result(@YES);
+          return;
+      }
+  }
+    result(@NO);
 }
 
 - (void)authenticateWithBiometrics:(NSDictionary *)arguments
