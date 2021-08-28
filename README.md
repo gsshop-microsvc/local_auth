@@ -6,6 +6,11 @@ the user.
 This means referring to biometric authentication on iOS (Touch ID or lock code)
 and the fingerprint APIs on Android (introduced in Android 6.0).
 
+## 수정내역
+
+- Android의 getAvailableBiometrics가 Fingerprint를 사용하도록 적용 [issue](https://github.com/flutter/plugins/pull/2442/commits)
+- isFingerPrintDeviceSupported 함수 자체를 추가
+
 ## Usage in Dart
 
 Import the relevant file:
