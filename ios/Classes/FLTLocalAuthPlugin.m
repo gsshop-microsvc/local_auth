@@ -125,12 +125,27 @@
   
   if ([context canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics
                            error:&authError]) {
-      if (authError == nil) {
-          result(@YES);
-          return;
+    result(@YES);
+    return;
+  } else {
+    if (@available(iOS 11.0.1, *)) {
+      if (authError.code == LAErrorBiometryNotEnrolled) {
+        result(@YES);
+        return;
+      } else {
+        result(@NO);
+        return;
       }
+    } else {
+      if (authError.code == LAErrorTouchIDNotEnrolled) {
+        result(@YES);
+        return;
+      } else {
+        result(@NO);
+        return;
+      }
+    }
   }
-    result(@NO);
 }
 
 - (void)authenticateWithBiometrics:(NSDictionary *)arguments
